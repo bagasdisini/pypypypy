@@ -23,7 +23,3 @@ class UserInDB(UserBase):
     is_active: bool
     created_at: datetime.datetime
     updated_at: Optional[datetime.datetime]
-
-    class Config:
-        orm_mode = True
-        exclude_none = True
