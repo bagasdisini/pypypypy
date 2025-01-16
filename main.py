@@ -1,5 +1,8 @@
+import logging
+
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 import version.version as version
 from api.provinces import provinces_router
@@ -15,7 +18,14 @@ app = FastAPI(
     version=version.VERSION,
 )
 
+logger = logging.getLogger(__name__)
 init_db()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=config.CORS_ALLOW_ORIGINS.split(','),
+    allow_headers=["*"],
+)
 
 
 @app.middleware("http")
@@ -56,5 +66,4 @@ app.include_router(provinces_router, prefix="/api", tags=["Province"])
 
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run(app, host=config.APP_HOST, port=config.APP_PORT)
