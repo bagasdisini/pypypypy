@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 import models.users as models
@@ -43,4 +44,16 @@ def delete_user(db: Session, user_id: int):
     if user:
         db.delete(user)
         db.commit()
+    return user
+
+
+mock_user_db = {
+    "123456": {"id": "123456", "email": "user@example.com", "role": "user", "is_active": True}
+}
+
+
+def find_user_by_id(user_id: str):
+    user = mock_user_db.get(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
     return user

@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 
 import crud.provinces
 import schemas.provinces
+import util.cache as util
 from db.postgresql import get_db
-
 
 provinces_router = APIRouter()
 
@@ -29,7 +29,13 @@ def create_province(province_data: schemas.provinces.ProvinceCreate, db: Session
 @provinces_router.get("/provinces", response_model=list[schemas.provinces.ProvinceInDB])
 def get_provinces(db: Session = Depends(get_db)):
     try:
+        cached_countries = util.get_cache("provinces")
+        if cached_countries is not None:
+            return cached_countries
+
         provinces = crud.provinces.get_provinces(db)
+
+        util.set_cache("provinces", provinces)
         return provinces
     except HTTPException:
         raise
@@ -41,9 +47,15 @@ def get_provinces(db: Session = Depends(get_db)):
 @provinces_router.get("/province/{province_id}", response_model=schemas.provinces.ProvinceInDB)
 def get_province_by_id(province_id: int, db: Session = Depends(get_db)):
     try:
+        cached_countries = util.get_cache("province"+str(province_id))
+        if cached_countries is not None:
+            return cached_countries
+
         province = crud.provinces.get_province_by_id(db, province_id)
         if province is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Province not found")
+
+        util.set_cache("province"+str(province_id), province)
         return province
     except HTTPException:
         raise

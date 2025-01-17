@@ -6,9 +6,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import version.version as version
 from api.provinces import provinces_router
+from api.security import security_router
 from api.users import users_router
 from core.config import config
 from db.postgresql import init_db
+from util.jwt import jwt
 
 AppName = "Pypypypy"
 
@@ -18,7 +20,7 @@ app = FastAPI(
     version=version.VERSION,
 )
 
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 init_db()
 
 app.add_middleware(
@@ -61,9 +63,10 @@ def get_version():
     return JSONResponse(content={"name": AppName, "version": version.VERSION})
 
 
+token = jwt.create_jwt_token("123456", "user@example.com", "user", "session123")
+print(token)
+
+
 app.include_router(users_router, prefix="/api", tags=["User"])
 app.include_router(provinces_router, prefix="/api", tags=["Province"])
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host=config.APP_HOST, port=config.APP_PORT)
+app.include_router(security_router, prefix="/api", tags=["Security"])
