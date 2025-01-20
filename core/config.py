@@ -13,6 +13,13 @@ class Config:
     AUTH_JWT_EXPIRE: int
     MIDTRANS_SERVER_KEY: str
 
+    RABBITMQ_USER: str
+    RABBITMQ_PASSWORD: str
+    RABBITMQ_HOST: str
+    RABBITMQ_PORT: int
+    RABBITMQ_VHOST: str
+    RABBITMQ_QUEUE: str
+
     def __init__(self):
         self.APP_HOST = os.getenv('APP_HOST')
         self.APP_PORT = int(os.getenv('APP_PORT'))
@@ -21,6 +28,13 @@ class Config:
         self.AUTH_JWT_KEY = os.getenv('AUTH_JWT_KEY')
         self.AUTH_JWT_EXPIRE = int(os.getenv('AUTH_JWT_EXPIRE'))
         self.MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
+
+        self.RABBITMQ_USER = os.getenv('RABBITMQ_USER')
+        self.RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD')
+        self.RABBITMQ_HOST = os.getenv('RABBITMQ_HOST')
+        self.RABBITMQ_PORT = int(os.getenv('RABBITMQ_PORT'))
+        self.RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST')
+        self.RABBITMQ_QUEUE = os.getenv('RABBITMQ_QUEUE')
 
         self._validate()
 
@@ -39,6 +53,18 @@ class Config:
             raise ValueError("AUTH_JWT_EXPIRE is not set or is empty")
         if not self.MIDTRANS_SERVER_KEY:
             raise ValueError("MIDTRANS_SERVER_KEY is not set or is empty")
+        if not self.RABBITMQ_USER:
+            raise ValueError("RABBITMQ_USER is not set or is empty")
+        if not self.RABBITMQ_PASSWORD:
+            raise ValueError("RABBITMQ_PASSWORD is not set or is empty")
+        if not self.RABBITMQ_HOST:
+            raise ValueError("RABBITMQ_HOST is not set or is empty")
+        if not self.RABBITMQ_PORT:
+            raise ValueError("RABBITMQ_PORT is not set or is empty")
+        if not self.RABBITMQ_VHOST:
+            raise ValueError("RABBITMQ_VHOST is not set or is empty")
+        if not self.RABBITMQ_QUEUE:
+            raise ValueError("RABBITMQ_QUEUE is not set or is empty")
 
 
 config = Config()

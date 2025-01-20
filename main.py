@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 import version.version as version
+from api.message import message_router
 from api.provinces import provinces_router
 from api.security import security_router
 from api.transaction import transaction_router
@@ -72,3 +73,4 @@ app.include_router(users_router, prefix="/api", tags=["User"])
 app.include_router(provinces_router, prefix="/api", tags=["Province"])
 app.include_router(security_router, prefix="/api", tags=["Security"])
 app.include_router(transaction_router, prefix="/api", tags=["Transaction"])
+app.include_router(message_router, prefix="/api", tags=["Message"])
