@@ -11,6 +11,7 @@ class Config:
     CORS_ALLOW_ORIGINS: str
     AUTH_JWT_KEY: str
     AUTH_JWT_EXPIRE: int
+    MIDTRANS_SERVER_KEY: str
 
     def __init__(self):
         self.APP_HOST = os.getenv('APP_HOST')
@@ -19,6 +20,7 @@ class Config:
         self.CORS_ALLOW_ORIGINS = os.getenv('CORS_ALLOW_ORIGINS')
         self.AUTH_JWT_KEY = os.getenv('AUTH_JWT_KEY')
         self.AUTH_JWT_EXPIRE = int(os.getenv('AUTH_JWT_EXPIRE'))
+        self.MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
 
         self._validate()
 
@@ -35,6 +37,8 @@ class Config:
             raise ValueError("AUTH_JWT_KEY is not set or is empty")
         if not self.AUTH_JWT_EXPIRE:
             raise ValueError("AUTH_JWT_EXPIRE is not set or is empty")
+        if not self.MIDTRANS_SERVER_KEY:
+            raise ValueError("MIDTRANS_SERVER_KEY is not set or is empty")
 
 
 config = Config()
@@ -42,3 +46,4 @@ config = Config()
 
 CONST_CACHE_DURATION = 60 # seconds
 CONST_JWT_ALGORITHM = "HS256"
+CONST_MIDTRANS_API = "https://app.sandbox.midtrans.com/snap/v1/transactions"

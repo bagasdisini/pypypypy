@@ -4,7 +4,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import jwt
 from pydantic import BaseModel
 
-import core.config
+from core.config import config
 
 
 security = HTTPBearer()
@@ -24,7 +24,7 @@ class UserClaims(BaseModel):
 
 def decode_jwt(token: str) -> UserClaims:
     try:
-        payload = jwt.decode(token, core.config.Config.AUTH_JWT_KEY, algorithms=[core.config.CONST_JWT_ALGORITHM])
+        payload = jwt.decode(token, config.AUTH_JWT_KEY, algorithms=["HS256"])
         claims = UserClaims(**payload)
         if claims.is_expired:
             raise HTTPException(status_code=401, detail="Token has expired")
@@ -41,7 +41,7 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
 
 
 def create_jwt_token(user_id: str, email: str, role: str, session_id: str) -> str:
-    expiration = datetime.now(tz=timezone.utc) + timedelta(days=core.config.Config.AUTH_JWT_EXPIRE)
+    expiration = datetime.now(tz=timezone.utc) + timedelta(days=config.AUTH_JWT_EXPIRE)
     payload = {
         "id": user_id,
         "email": email,
@@ -50,5 +50,5 @@ def create_jwt_token(user_id: str, email: str, role: str, session_id: str) -> st
         "expired_date_in_millis": int(expiration.timestamp() * 1000),
         "exp": expiration
     }
-    token = jwt.encode(payload, core.config.Config.AUTH_JWT_KEY, algorithm=core.config.CONST_JWT_ALGORITHM)
+    token = jwt.encode(payload, config.AUTH_JWT_KEY, algorithm="HS256")
     return token

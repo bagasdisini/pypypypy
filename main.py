@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import version.version as version
 from api.provinces import provinces_router
 from api.security import security_router
+from api.transaction import transaction_router
 from api.users import users_router
 from core.config import config
 from db.postgresql import init_db
@@ -70,3 +71,4 @@ print(token)
 app.include_router(users_router, prefix="/api", tags=["User"])
 app.include_router(provinces_router, prefix="/api", tags=["Province"])
 app.include_router(security_router, prefix="/api", tags=["Security"])
+app.include_router(transaction_router, prefix="/api", tags=["Transaction"])
