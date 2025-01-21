@@ -1,8 +1,7 @@
-from celery import Celery
-from kombu import Queue
-
 import json
 
+from celery import Celery
+from kombu import Queue
 from core.config import config
 
 
@@ -13,9 +12,11 @@ app = Celery(
     include=['util.rabbit.pusher'],
 )
 
+
 app.conf.task_queues = (
     Queue(config.RABBITMQ_QUEUE, durable=True),
 )
+
 
 app.conf.task_routes = {
     'util.rabbit.pusher.push_to_rabbit': {'queue': config.RABBITMQ_QUEUE},

@@ -1,11 +1,10 @@
+import jwt
+
 from datetime import datetime, timezone, timedelta
 from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-import jwt
 from pydantic import BaseModel
-
 from core.config import config
-
 
 security = HTTPBearer()
 

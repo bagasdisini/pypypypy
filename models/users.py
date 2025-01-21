@@ -1,4 +1,5 @@
 import datetime
+
 from sqlalchemy import Integer, String, Boolean, Column, DateTime
 from db.postgresql import Base
 

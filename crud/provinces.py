@@ -1,11 +1,12 @@
+import models.provinces
+import schemas.provinces
+
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-import models.provinces as models
-import schemas.provinces as schemas
 
-def create_province(db: Session, province_data: schemas.ProvinceCreate):
+def create_province(db: Session, province_data: schemas.provinces.ProvinceCreate):
     try:
-        province = models.Province(**province_data.model_dump())
+        province = models.provinces.Province(**province_data.model_dump())
         db.add(province)
         db.commit()
         db.refresh(province)
@@ -16,28 +17,28 @@ def create_province(db: Session, province_data: schemas.ProvinceCreate):
 
 def get_provinces(db: Session):
     try:
-        return db.query(models.Province).all()
+        return db.query(models.provinces.Province).all()
     except SQLAlchemyError as e:
         raise
 
 
 def get_province_by_id(db: Session, province_id: int):
     try:
-        return db.query(models.Province).filter(models.Province.id == province_id).first()
+        return db.query(models.provinces.Province).filter(models.provinces.Province.id == province_id).first()
     except SQLAlchemyError as e:
         raise
 
 
 def get_province_by_name(db: Session, name: str):
     try:
-        return db.query(models.Province).filter(models.Province.name == name).first()
+        return db.query(models.provinces.Province).filter(models.provinces.Province.name == name).first()
     except SQLAlchemyError as e:
         raise
 
 
-def update_province(db: Session, province_id: int, province_data: schemas.ProvinceUpdate):
+def update_province(db: Session, province_id: int, province_data: schemas.provinces.ProvinceUpdate):
     try:
-        province = db.query(models.Province).filter(models.Province.id == province_id).first()
+        province = db.query(models.provinces.Province).filter(models.provinces.Province.id == province_id).first()
         if province:
             for key, value in province_data.model_dump(exclude_unset=True).items():
                 setattr(province, key, value)
@@ -50,7 +51,7 @@ def update_province(db: Session, province_id: int, province_data: schemas.Provin
 
 def delete_province(db: Session, province_id: int):
     try:
-        province = db.query(models.Province).filter(models.Province.id == province_id).first()
+        province = db.query(models.provinces.Province).filter(models.provinces.Province.id == province_id).first()
         if province:
             db.delete(province)
             db.commit()

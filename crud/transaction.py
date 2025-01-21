@@ -1,10 +1,11 @@
-from sqlalchemy.orm import Session
-import schemas.transaction as schemas
-import models.transaction as models
+import schemas.transaction
+import models.transaction
 
-def create_transaction(db: Session, transaction_data: schemas.TransactionCreate):
+from sqlalchemy.orm import Session
+
+def create_transaction(db: Session, transaction_data: schemas.transaction.TransactionCreate):
     try:
-        transaction = models.Transaction(**transaction_data.model_dump())
+        transaction = models.transaction.Transaction(**transaction_data.model_dump())
         db.add(transaction)
         db.commit()
         db.refresh(transaction)

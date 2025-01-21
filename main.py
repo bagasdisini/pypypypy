@@ -1,10 +1,9 @@
 import logging
+import version.version as version
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-
-import version.version as version
 from api.message import message_router
 from api.provinces import provinces_router
 from api.security import security_router

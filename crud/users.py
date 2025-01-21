@@ -1,12 +1,13 @@
+import models.users
+import schemas.users
+
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-import models.users as models
-import schemas.users as schemas
 
 
-def create_user(db: Session, user_data: schemas.UserCreate):
-    user = models.User(**user_data.model_dump())
+def create_user(db: Session, user_data: schemas.users.UserCreate):
+    user = models.users.User(**user_data.model_dump())
     db.add(user)
     db.commit()
     db.refresh(user)
@@ -14,23 +15,23 @@ def create_user(db: Session, user_data: schemas.UserCreate):
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.User).offset(skip).limit(limit).all()
+    return db.query(models.users.User).offset(skip).limit(limit).all()
 
 
 def get_user_by_id(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+    return db.query(models.users.User).filter(models.users.User.id == user_id).first()
 
 
 def get_user_by_username(db: Session, username: str):
-    return db.query(models.User).filter(models.User.username == username).first()
+    return db.query(models.users.User).filter(models.users.User.username == username).first()
 
 
 def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
+    return db.query(models.users.User).filter(models.users.User.email == email).first()
 
 
-def update_user(db: Session, user_id: int, user_data: schemas.UserUpdate):
-    user = db.query(models.User).filter(models.User.id == user_id).first()
+def update_user(db: Session, user_id: int, user_data: schemas.users.UserUpdate):
+    user = db.query(models.users.User).filter(models.users.User.id == user_id).first()
     if user:
         for key, value in user_data.model_dump().items():
             setattr(user, key, value)
@@ -40,7 +41,7 @@ def update_user(db: Session, user_id: int, user_data: schemas.UserUpdate):
 
 
 def delete_user(db: Session, user_id: int):
-    user = db.query(models.User).filter(models.User.id == user_id).first()
+    user = db.query(models.users.User).filter(models.users.User.id == user_id).first()
     if user:
         db.delete(user)
         db.commit()
