@@ -9,3 +9,5 @@ PyJWT~=2.10.1
 midtransclient~=1.4.2
 celery~=5.4.0
 kombu~=5.4.2
+uvicorn~=0.34.0
+psycopg2-binary~=2.9.10

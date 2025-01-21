@@ -1,4 +1,5 @@
 import logging
+import uvicorn
 import version.version as version
 
 from fastapi import FastAPI, Request
@@ -8,6 +9,7 @@ from api.message import message_router
 from api.provinces import provinces_router
 from api.security import security_router
 from api.transaction import transaction_router
+from api.transaction_log import transaction_log_router
 from api.users import users_router
 from core.config import config
 from db.postgresql import init_db
@@ -41,7 +43,7 @@ async def secure_headers(request: Request, call_next):
 
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
-async def root():
+def root():
     html_template = f"""
     <!DOCTYPE html>
     <html lang="en">
@@ -72,4 +74,13 @@ app.include_router(users_router, prefix="/api", tags=["User"])
 app.include_router(provinces_router, prefix="/api", tags=["Province"])
 app.include_router(security_router, prefix="/api", tags=["Security"])
 app.include_router(transaction_router, prefix="/api", tags=["Transaction"])
+app.include_router(transaction_log_router, prefix="/api", tags=["Transaction Log"])
 app.include_router(message_router, prefix="/api", tags=["Message"])
+
+if __name__ == "__main__":
+    uvicorn.run(
+        "main:app",
+        host=config.APP_HOST,
+        port=config.APP_PORT,
+        reload=True
+    )

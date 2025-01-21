@@ -5,38 +5,32 @@ load_dotenv()
 
 
 class Config:
-    APP_HOST: str
-    APP_PORT: int
-    DATABASE_URL: str
-    CORS_ALLOW_ORIGINS: str
-    AUTH_JWT_KEY: str
-    AUTH_JWT_EXPIRE: int
-    MIDTRANS_SERVER_KEY: str
+    _instance = None
 
-    RABBITMQ_USER: str
-    RABBITMQ_PASSWORD: str
-    RABBITMQ_HOST: str
-    RABBITMQ_PORT: int
-    RABBITMQ_VHOST: str
-    RABBITMQ_QUEUE: str
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(Config, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
 
     def __init__(self):
-        self.APP_HOST = os.getenv('APP_HOST')
-        self.APP_PORT = int(os.getenv('APP_PORT'))
-        self.DATABASE_URL = os.getenv('DATABASE_URL')
-        self.CORS_ALLOW_ORIGINS = os.getenv('CORS_ALLOW_ORIGINS')
-        self.AUTH_JWT_KEY = os.getenv('AUTH_JWT_KEY')
-        self.AUTH_JWT_EXPIRE = int(os.getenv('AUTH_JWT_EXPIRE'))
-        self.MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
+        if not hasattr(self, "_initialized"):
+            self._initialized = True
+            self.APP_HOST = os.getenv('APP_HOST')
+            self.APP_PORT = int(os.getenv('APP_PORT'))
+            self.DATABASE_URL = os.getenv('DATABASE_URL')
+            self.CORS_ALLOW_ORIGINS = os.getenv('CORS_ALLOW_ORIGINS')
+            self.AUTH_JWT_KEY = os.getenv('AUTH_JWT_KEY')
+            self.AUTH_JWT_EXPIRE = int(os.getenv('AUTH_JWT_EXPIRE'))
+            self.MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
 
-        self.RABBITMQ_USER = os.getenv('RABBITMQ_USER')
-        self.RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD')
-        self.RABBITMQ_HOST = os.getenv('RABBITMQ_HOST')
-        self.RABBITMQ_PORT = int(os.getenv('RABBITMQ_PORT'))
-        self.RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST')
-        self.RABBITMQ_QUEUE = os.getenv('RABBITMQ_QUEUE')
+            self.RABBITMQ_USER = os.getenv('RABBITMQ_USER')
+            self.RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD')
+            self.RABBITMQ_HOST = os.getenv('RABBITMQ_HOST')
+            self.RABBITMQ_PORT = int(os.getenv('RABBITMQ_PORT'))
+            self.RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST')
+            self.RABBITMQ_QUEUE = os.getenv('RABBITMQ_QUEUE')
 
-        self._validate()
+            self._validate()
 
     def _validate(self):
         if not self.APP_HOST:
