@@ -11,7 +11,12 @@ class TransactionCreate(TransactionBase):
     pass
 
 
+class TransactionCoreCardCreate(TransactionBase):
+    token_id: str
+
+
 class TransactionUpdate(TransactionBase):
+    status: str
     pass
 
 

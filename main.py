@@ -28,18 +28,20 @@ init_db()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=config.CORS_ALLOW_ORIGINS.split(','),
+    allow_origins="*".split(","),
+    allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-@app.middleware("http")
-async def secure_headers(request: Request, call_next):
-    response = await call_next(request)
-    response.headers["X-Frame-Options"] = "SAMEORIGIN"
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-XSS-Protection"] = "1; mode=block"
-    return response
+# @app.middleware("http")
+# async def secure_headers(request: Request, call_next):
+#     response = await call_next(request)
+#     response.headers["X-Frame-Options"] = "SAMEORIGIN"
+#     response.headers["X-Content-Type-Options"] = "nosniff"
+#     response.headers["X-XSS-Protection"] = "1; mode=block"
+#     return response
 
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)

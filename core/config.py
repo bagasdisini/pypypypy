@@ -22,6 +22,7 @@ class Config:
             self.AUTH_JWT_KEY = os.getenv('AUTH_JWT_KEY')
             self.AUTH_JWT_EXPIRE = int(os.getenv('AUTH_JWT_EXPIRE'))
             self.MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
+            self.MIDTRANS_CLIENT_KEY = os.getenv('MIDTRANS_CLIENT_KEY')
 
             self.RABBITMQ_USER = os.getenv('RABBITMQ_USER')
             self.RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD')
@@ -47,6 +48,8 @@ class Config:
             raise ValueError("AUTH_JWT_EXPIRE is not set or is empty")
         if not self.MIDTRANS_SERVER_KEY:
             raise ValueError("MIDTRANS_SERVER_KEY is not set or is empty")
+        if not self.MIDTRANS_CLIENT_KEY:
+            raise ValueError("MIDTRANS_CLIENT_KEY is not set or is empty")
         if not self.RABBITMQ_USER:
             raise ValueError("RABBITMQ_USER is not set or is empty")
         if not self.RABBITMQ_PASSWORD:
