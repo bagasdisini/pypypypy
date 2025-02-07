@@ -13,7 +13,7 @@ transaction_router = APIRouter()
 
 
 @transaction_router.post("/transaction", status_code=201)
-def create_transaction(transaction_data: schemas.transaction.TransactionCreate, db: Session = Depends(get_db)):
+def create_transaction(transaction_data: schemas.transaction.TransactionSchema, db: Session = Depends(get_db)):
     try:
         snap = midtransclient.Snap(
             is_production=False,
@@ -22,15 +22,41 @@ def create_transaction(transaction_data: schemas.transaction.TransactionCreate, 
         param = {
             "transaction_details": {
                 "order_id": uuid.uuid4().hex,
-                "gross_amount": transaction_data.amount
+                "gross_amount": transaction_data.gross_amount
             }, "credit_card": {
                 "secure": True
             }, "customer_details": {
-                "first_name": transaction_data.name,
-                "last_name": util.string.random_string(5),
-                "email": util.string.random_string(5)+"@example.com",
-                "phone": "08111222333"
-            }
+                "first_name": transaction_data.customer.first_name,
+                "last_name": transaction_data.customer.last_name,
+                "email": transaction_data.customer.email,
+                "phone": transaction_data.customer.phone,
+                "billing_address": {
+                    "first_name": transaction_data.customer.billing_address.first_name,
+                    "last_name": transaction_data.customer.billing_address.last_name,
+                    "email": transaction_data.customer.billing_address.email,
+                    "phone": transaction_data.customer.billing_address.phone,
+                    "address": transaction_data.customer.billing_address.address,
+                    "city": transaction_data.customer.billing_address.city,
+                    "postal_code": transaction_data.customer.billing_address.postal_code,
+                    "country_code": transaction_data.customer.billing_address.country_code
+                }, "shipping_address": {
+                    "first_name": transaction_data.customer.shipping_address.first_name,
+                    "last_name": transaction_data.customer.shipping_address.last_name,
+                    "email": transaction_data.customer.shipping_address.email,
+                    "phone": transaction_data.customer.shipping_address.phone,
+                    "address": transaction_data.customer.shipping_address.address,
+                    "city": transaction_data.customer.shipping_address.city,
+                    "postal_code": transaction_data.customer.shipping_address.postal_code,
+                    "country_code": transaction_data.customer.shipping_address.country_code
+                }
+            }, "item_details": [
+                {
+                    "id": item.item_id,
+                    "price": item.price,
+                    "quantity": item.quantity,
+                    "name": item.name
+                } for item in transaction_data.items
+            ]
         }
 
         transaction = snap.create_transaction(param)
